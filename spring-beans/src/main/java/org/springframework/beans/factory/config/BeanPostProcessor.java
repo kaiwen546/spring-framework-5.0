@@ -39,6 +39,11 @@ import org.springframework.lang.Nullable;
  * @see DestructionAwareBeanPostProcessor
  * @see ConfigurableBeanFactory#addBeanPostProcessor
  * @see BeanFactoryPostProcessor
+ * BeanPostProcessor是Spring框架的提供的一个扩展类点
+ * 通过实现BeanPostProcessor接口，程序员就可插手bean实例化的过程,从而减轻了beanFactory的负担
+ * 这个接口可以实现多次形成一个列表依次执行 也可以通过实现PriorityOrdered 接口改变其执行顺序
+ * AOP就是在bean实例后期间将切面逻辑织入bean实例中
+ * AOP也正是通过BeanPostProcessor和IOC容器建立走了联系
  */
 public interface BeanPostProcessor {
 
@@ -54,6 +59,7 @@ public interface BeanPostProcessor {
 	 * if {@code null}, no subsequent BeanPostProcessors will be invoked
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet
+	 * 在bean初始化之前执行
 	 */
 	@Nullable
 	default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -80,6 +86,7 @@ public interface BeanPostProcessor {
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet
 	 * @see org.springframework.beans.factory.FactoryBean
+	 * bean初始化之后执行
 	 */
 	@Nullable
 	default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
