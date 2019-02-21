@@ -29,6 +29,8 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
  * @author Juergen Hoeller
  * @since 3.0.1
  * @see org.springframework.context.annotation.ConfigurationClassPostProcessor
+ * 此接口继承了BeanFactoryPostProcessor 比它更强大
+ * 也是spring扩展点之一
  */
 public interface BeanDefinitionRegistryPostProcessor extends BeanFactoryPostProcessor {
 
