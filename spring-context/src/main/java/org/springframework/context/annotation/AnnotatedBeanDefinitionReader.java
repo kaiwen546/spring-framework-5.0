@@ -225,7 +225,10 @@ public class AnnotatedBeanDefinitionReader {
 		 * getShortName 转小写
 		 */
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
-
+		/**
+		 * 处理配置类上的注解,包括:
+		 * Lazy Primary DependOn Role Description
+		 */
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {
