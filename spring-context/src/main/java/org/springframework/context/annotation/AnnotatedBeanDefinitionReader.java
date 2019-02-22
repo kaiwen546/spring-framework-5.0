@@ -221,6 +221,9 @@ public class AnnotatedBeanDefinitionReader {
 		abd.setInstanceSupplier(instanceSupplier);
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
 		abd.setScope(scopeMetadata.getScopeName());
+		/**
+		 * getShortName 转小写
+		 */
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
@@ -243,6 +246,10 @@ public class AnnotatedBeanDefinitionReader {
 
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+		/**
+		 * 注册beanDefinition就是干这事
+		 * this.beanDefinitionMap.put(beanName, beanDefinition);
+		 */
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}
 
