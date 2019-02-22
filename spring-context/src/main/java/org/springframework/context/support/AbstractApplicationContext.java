@@ -532,13 +532,20 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				//当前版本没有任何代码  可能spring期待在后面的版本去扩展
 				postProcessBeanFactory(beanFactory);
 
-				// Invoke factory processors registered as beans in the context.
-				//在spring的环境中去执行已被注册的 factory processors
-				//设置执行自定义的ProcessBeanFactory 和 spring内部自定义的
+				/**
+				 * Invoke factory processors registered as beans in the context.
+				 * 在spring的环境中去执行已被注册的 factory processors
+				 * 设置执行自定义的ProcessBeanFactory 和 spring内部自定义的
+				 */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
-				//注册beanPostProcessor
+				/**
+				 * 注册beanPostProcessor
+				 * 执行在处理 BeanFactoryPostProcessor 之后
+				 * beanPostProcessor初始化发生在BeanFactoryPostProcessor之后
+				 * 处理我们自定义的BeanPostProcessor对象和spring内部的
+				 */
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.

@@ -247,6 +247,11 @@ final class PostProcessorRegistrationDelegate {
 		}
 
 		// First, register the BeanPostProcessors that implement PriorityOrdered.
+		/**
+		 * 对实现接口BeanPostProcessor的对象进行排序  包括我们自己实现的与spring内部的
+		 * 如 我们自定义的类实现了BeanPostProcessor,PriorityOrdered
+		 * 重写PriorityOrdered接口的getOrder()方法 返回值越小越靠前
+		 */
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
 		registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
 
