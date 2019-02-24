@@ -111,10 +111,21 @@ abstract class ConfigurationClassUtils {
 				return false;
 			}
 		}
-
+		/**
+		 * 判断当前这个bd类是否加了@Configuration注解
+		 * 如果加了  则会设置一个full的属性值  认为是一个全注解
+		 */
 		if (isFullConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
+		/**
+		 * 如果没加@Configuration注解 但是却加了以下几个注解的话  则为属性设置一个lite值
+		 * 认为是一个精简版的注解 	阉割版
+		 * Component
+		 * ComponentScan
+		 * Import
+		 * ImportResource
+		 */
 		else if (isLiteConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}

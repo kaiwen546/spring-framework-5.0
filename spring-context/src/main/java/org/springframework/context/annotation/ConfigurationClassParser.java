@@ -306,6 +306,11 @@ class ConfigurationClassParser {
 		}
 
 		// Process any @Import annotations
+		/**
+		 * 处理配置类上的@Import注解
+		 * mybatis的@MapperScan其实就是对@Import的一个封装
+		 * 通过ImportBeanDefinitionRegistrar接口 实现动态注册一个代理类到beanDefinitionMap
+		 */
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
 		// Process any @ImportResource annotations

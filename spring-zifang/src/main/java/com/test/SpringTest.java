@@ -13,6 +13,12 @@ public class SpringTest {
 	public static void main(String[] args) {
 		//AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
 		AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext();
+		/**
+		 * 注册一个类有三种办法
+		 * 一,register()
+		 * 二,scan			前面这两种把一个类变为bd是我们没有办法参与的
+		 * 三,ImportBeanDefinitionRegistrar  可以动态添加到beanDefinitionMap中
+		 */
 		annotationConfigApplicationContext.register(AppConfig.class);
 		annotationConfigApplicationContext.addBeanFactoryPostProcessor(new MyBeanFactoryPostProcessor());
 		annotationConfigApplicationContext.refresh();
@@ -25,5 +31,6 @@ public class SpringTest {
 		Dao dao1 = (Dao) annotationConfigApplicationContext.getBean("dao");
 		System.out.println("dao:" + dao.hashCode() + "============" + "dao1:" + dao1.hashCode());
 		dao.query();
+
 	}
 }
