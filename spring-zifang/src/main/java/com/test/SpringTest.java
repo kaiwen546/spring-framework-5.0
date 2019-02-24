@@ -25,6 +25,5 @@ public class SpringTest {
 		Dao dao1 = (Dao) annotationConfigApplicationContext.getBean("dao");
 		System.out.println("dao:" + dao.hashCode() + "============" + "dao1:" + dao1.hashCode());
 		dao.query();
-
 	}
 }
