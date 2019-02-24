@@ -327,7 +327,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
 		/**
 		 * 新建两个set  candidates用于将之前加入的configCandidates进行去重
-		 * 因为可以有多个配置类重复了
+		 * 因为可以有多个配置类重复了 spring自己不可能有重复的  但是我们可以插入这个过程
+		 * 所以如果有重复的话 那就是我们自己定义的
 		 * alreadyParsed 判断是否处理过
 		 */
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
