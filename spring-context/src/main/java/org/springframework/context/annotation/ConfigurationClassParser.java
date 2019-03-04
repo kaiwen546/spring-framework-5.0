@@ -164,7 +164,10 @@ class ConfigurationClassParser {
 		for (BeanDefinitionHolder holder : configCandidates) {
 			BeanDefinition bd = holder.getBeanDefinition();
 			try {
-
+				/**
+				 * 如果bd是AnnotatedBeanDefinition类型
+				 * 则把这个bd放入到这个configurationClasses map中
+				 */
 				if (bd instanceof AnnotatedBeanDefinition) {
 					parse(((AnnotatedBeanDefinition) bd).getMetadata(), holder.getBeanName());
 				}
@@ -290,6 +293,10 @@ class ConfigurationClassParser {
 			 */
 			for (AnnotationAttributes componentScan : componentScans) {
 				// The config class is annotated with @ComponentScan -> perform the scan immediately
+				/**
+				 * 这里扫描所有的@Component
+				 * 包括@Service  @Repository  等...
+				 */
 				Set<BeanDefinitionHolder> scannedBeanDefinitions =
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
 				// Check the set of scanned definitions for any further config classes and parse recursively if needed
@@ -310,6 +317,8 @@ class ConfigurationClassParser {
 		 * 处理配置类上的@Import注解
 		 * mybatis的@MapperScan其实就是对@Import的一个封装
 		 * 通过ImportBeanDefinitionRegistrar接口 实现动态注册一个代理类到beanDefinitionMap
+		 * Import有三种情况  ImportSelector   ImportBeanDefinitionRegistrar   普通类
+		 * ImportSelector接口 	可以实现对功能的动态开启与关闭  	如 aop
 		 */
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
