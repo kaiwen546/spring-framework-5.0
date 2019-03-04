@@ -118,7 +118,13 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
+			/**
+			 * 执行所有的beanDefinitionRegistrarPostProcessor 包括spring及我们自己的
+			 */
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
+			/**
+			 * 这里的list是一个临时变量 要清除
+			 */
 			currentRegistryProcessors.clear();
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
@@ -153,6 +159,11 @@ final class PostProcessorRegistrationDelegate {
 			}
 
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
+			/**
+			 * 前面执行的BeanFactoryPostProcessor的子类 BeanDefinitionRegistrarPostProcessor
+			 * 这里执行的是 BeanFactoryPostProcessor  所谓回调就是指这个接口中的postProcessorBeanFactory方法
+			 * 除了我自定义的  Spring自己的类实现了 BeanDefinitionRegistrarPostProcessor 接口的只有ConfigurationClassBeanDefinition
+			 */
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}

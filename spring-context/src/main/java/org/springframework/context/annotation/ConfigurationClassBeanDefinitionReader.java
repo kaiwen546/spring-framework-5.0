@@ -134,6 +134,10 @@ class ConfigurationClassBeanDefinitionReader {
 			return;
 		}
 
+		/**
+		 * 如果一个类是被Import的, 会被spring标注
+		 * 在这是完成注册   即在这个方法中添加到beanDefinitionMap中
+		 */
 		if (configClass.isImported()) {
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
 		}

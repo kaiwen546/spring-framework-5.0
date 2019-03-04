@@ -247,7 +247,10 @@ class ConfigurationClassParser {
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
-
+		/**
+		 * 普通类(加@Component注解等..)的处理放入beanDefinitionMap中
+		 * 此处不一样
+		 */
 		this.configurationClasses.put(configClass, configClass);
 	}
 
@@ -319,6 +322,7 @@ class ConfigurationClassParser {
 		 * 通过ImportBeanDefinitionRegistrar接口 实现动态注册一个代理类到beanDefinitionMap
 		 * Import有三种情况  ImportSelector   ImportBeanDefinitionRegistrar   普通类
 		 * ImportSelector接口 	可以实现对功能的动态开启与关闭  	如 aop
+		 * getImports 方法用来获取@Import注解的值
 		 */
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
@@ -575,6 +579,10 @@ class ConfigurationClassParser {
 		else {
 			this.importStack.push(configClass);
 			try {
+				/**
+				 * 分别处理加ImportSelector注解的类 加ImportBeanDefinitionRegistrar
+				 * 以及普通类 (加@Component 等注解的...
+				 */
 				for (SourceClass candidate : importCandidates) {
 					if (candidate.isAssignable(ImportSelector.class)) {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
@@ -605,6 +613,13 @@ class ConfigurationClassParser {
 					else {
 						// Candidate class not an ImportSelector or ImportBeanDefinitionRegistrar ->
 						// process it as an @Configuration class
+						/**
+						 * 加入到importStack后面调用processConfigurationClass进行处理
+						 * processConfigurationClass里面主要就是把类放到configurationClasses
+						 * configurationClasses是一个集合,会在后面拿出来解析成bd继而注册
+						 * 而普通类在扫描的时候就被注册了
+						 * 如ImportSelector 会先放到configurationClasses	后面进行注册
+						 */
 						this.importStack.registerImport(
 								currentSourceClass.getMetadata(), candidate.getMetadata().getClassName());
 						processConfigurationClass(candidate.asConfigClass(configClass));

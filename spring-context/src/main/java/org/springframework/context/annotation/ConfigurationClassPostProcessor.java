@@ -249,7 +249,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			// Simply call processConfigurationClasses lazily at this point then.
 			processConfigBeanDefinitions((BeanDefinitionRegistry) beanFactory);
 		}
-
+		/**
+		 * 产生cglib代理
+		 * 为什么需要产生cglib代理?
+		 */
 		enhanceConfigurationClasses(beanFactory);
 		beanFactory.addBeanPostProcessor(new ImportAwareBeanPostProcessor(beanFactory));
 	}
@@ -348,7 +351,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
 			/**
-			 * 把扫描出的bean对应的BeanDefinition添加到factory的map当中
+			 * 这里面扫描出的bean当中可能含有特殊的类
+			 * 比如ImportBeanDefinitionRegistrar 也在这个方法里处理
+			 * 但是并不包含在configClasses中 configClasses当中主要包含ImportSelector
+			 * 因为ImportBeanDefinitionRegistrar 在扫描出来的时候已经被添加到一个list当中
 			 */
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
@@ -392,6 +398,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * any candidates are then enhanced by a {@link ConfigurationClassEnhancer}.
 	 * Candidate status is determined by BeanDefinition attribute metadata.
 	 * @see ConfigurationClassEnhancer
+	 * spring 为全配置类(full) 生成bean的时候加上cglib代理
+	 * 部分配置类(lite)生成bean 的时候用原生的
 	 */
 	public void enhanceConfigurationClasses(ConfigurableListableBeanFactory beanFactory) {
 		Map<String, AbstractBeanDefinition> configBeanDefs = new LinkedHashMap<>();
@@ -413,9 +421,15 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 		if (configBeanDefs.isEmpty()) {
 			// nothing to enhance -> return immediately
+			/**
+			 * 配置类上不加 @Cofiguration注解的 这时直接返回
+			 */
 			return;
 		}
-
+		/**
+		 * 加了@Configuration注解的 继续执行
+		 * 前面对加@Configuration 的设置attribute 的值为full  不加的设置值为lite 一个标识
+		 */
 		ConfigurationClassEnhancer enhancer = new ConfigurationClassEnhancer();
 		for (Map.Entry<String, AbstractBeanDefinition> entry : configBeanDefs.entrySet()) {
 			AbstractBeanDefinition beanDef = entry.getValue();
