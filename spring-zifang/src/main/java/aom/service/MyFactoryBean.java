@@ -1,12 +1,10 @@
 package aom.service;
 
-import com.sun.org.apache.bcel.internal.generic.Select;
 import org.springframework.beans.factory.FactoryBean;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.List;
 
 public class MyFactoryBean implements InvocationHandler, FactoryBean {
 	Class clazz;
