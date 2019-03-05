@@ -74,7 +74,12 @@ class ConfigurationClassEnhancer {
 
 	// The callbacks to use. Note that these callbacks must be stateless.
 	private static final Callback[] CALLBACKS = new Callback[] {
+			/**
+			 * 增强方法,主要是控制bean的作用域
+			 * 就是不让每次都去new对象
+			*/
 			new BeanMethodInterceptor(),
+			//设置一个beanFactory
 			new BeanFactoryAwareMethodInterceptor(),
 			NoOp.INSTANCE
 	};
@@ -95,6 +100,9 @@ class ConfigurationClassEnhancer {
 	 * @return the enhanced subclass
 	 */
 	public Class<?> enhance(Class<?> configClass, @Nullable ClassLoader classLoader) {
+		/**
+		 * 判断有没有被代理过
+		 */
 		if (EnhancedConfiguration.class.isAssignableFrom(configClass)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("Ignoring request to enhance %s as it has " +
@@ -147,6 +155,7 @@ class ConfigurationClassEnhancer {
 		enhancer.setStrategy(new BeanFactoryAwareGeneratorStrategy(classLoader));
 		/**
 		 * 过滤方法,不能每次都去new
+		 * 重点 CALLBACK_FILTER
 		 */
 		enhancer.setCallbackFilter(CALLBACK_FILTER);
 		enhancer.setCallbackTypes(CALLBACK_FILTER.getCallbackTypes());
@@ -339,7 +348,9 @@ class ConfigurationClassEnhancer {
 		@Nullable
 		public Object intercept(Object enhancedConfigInstance, Method beanMethod, Object[] beanMethodArgs,
 					MethodProxy cglibMethodProxy) throws Throwable {
-
+			/**
+			 * 通过enhancedConfigInstance中cglib生成的成员变量$$beanFactory获得beanFactory
+			 */
 			ConfigurableBeanFactory beanFactory = getBeanFactory(enhancedConfigInstance);
 			String beanName = BeanAnnotationHelper.determineBeanNameFor(beanMethod);
 
@@ -369,7 +380,11 @@ class ConfigurationClassEnhancer {
 					return enhanceFactoryBean(factoryBean, beanMethod.getReturnType(), beanFactory, beanName);
 				}
 			}
-
+			/**
+			 * 判断执行的方法和调用的方法是不是同一个方法
+			 * 判断是new 还是get  也就是说是不是第一次调用 第一次去new 否则get
+			 * 配置类中加@Bean的static方法(为原型方法)不会走这里
+			 */
 			if (isCurrentlyInvokedFactoryMethod(beanMethod)) {
 				// The factory is calling the bean method in order to instantiate and register the bean
 				// (i.e. via a getBean() call) -> invoke the super implementation of the method to actually
@@ -397,6 +412,9 @@ class ConfigurationClassEnhancer {
 			// the bean method, direct or indirect. The bean may have already been marked
 			// as 'in creation' in certain autowiring scenarios; if so, temporarily set
 			// the in-creation status to false in order to avoid an exception.
+			/**
+			 * 判断是否正在创建
+			 */
 			boolean alreadyInCreation = beanFactory.isCurrentlyInCreation(beanName);
 			try {
 				if (alreadyInCreation) {
@@ -414,6 +432,10 @@ class ConfigurationClassEnhancer {
 						}
 					}
 				}
+				/**
+				 * beanFactory.getBean
+				 * 已经创建 直接去beanFactory中去拿
+				 */
 				Object beanInstance = (useArgs ? beanFactory.getBean(beanName, beanMethodArgs) :
 						beanFactory.getBean(beanName));
 				if (!ClassUtils.isAssignableValue(beanMethod.getReturnType(), beanInstance)) {

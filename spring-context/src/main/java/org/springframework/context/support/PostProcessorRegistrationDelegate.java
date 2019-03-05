@@ -165,6 +165,7 @@ final class PostProcessorRegistrationDelegate {
 			 * 除了我自定义的  Spring自己的类实现了 BeanDefinitionRegistrarPostProcessor 接口的只有ConfigurationClassBeanDefinition
 			 */
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
+			//自定义的BeanFactoryPostProcessor
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
 
