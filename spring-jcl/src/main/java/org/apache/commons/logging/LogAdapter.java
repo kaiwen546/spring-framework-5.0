@@ -86,10 +86,16 @@ final class LogAdapter {
 	public static Log createLog(String name) {
 		switch (logApi) {
 			case LOG4J:
+				//这里是log4j2 不是log4j
 				return Log4jAdapter.createLog(name);
 			case SLF4J_LAL:
 				return Slf4jAdapter.createLocationAwareLog(name);
 			case SLF4J:
+				/**
+				 * 需要引入slf4j的jar包
+				 * 如果需要用到其他日志  还需要去依赖 绑定器的jar
+				 * 注意这里绑定器,不是桥接器  slf4j官网有依赖
+				 */
 				return Slf4jAdapter.createLog(name);
 			default:
 				// Defensively use lazy-initializing adapter class here as well since the
