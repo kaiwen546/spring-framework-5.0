@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Import(MyImportSelector.class)
 public @interface EnableMySelector {
+
 }
