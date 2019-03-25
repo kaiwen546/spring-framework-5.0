@@ -87,6 +87,7 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 	 * instances being invoked on this bean instance.
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 * @see #postProcessBeforeInstantiation
+	 * 默认为true 会去修改属性,并自动装配,false则相反
 	 */
 	default boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
 		return true;
