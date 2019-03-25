@@ -428,6 +428,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
 			/**
 			 * 第八次执行后置处理器
+			 * 初始化过程  当bean已经new出来,并且完成了属性的填充(自动装配)
 			 */
 			Object current = processor.postProcessAfterInitialization(result, beanName);
 			if (current == null) {
